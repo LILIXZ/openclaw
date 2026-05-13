@@ -80,6 +80,32 @@ docs/          # mdx docs + generated API references
 - Do not edit baseline/snapshot/expected-failure files without explicit approval.
 - Test guide: `docs/help/testing.md`.
 
+### Code conventions
+
+- **Imports**: `.js` extension on all ESM cross-package imports; `import type { X }` for type-only. No re-export wrapper files — import directly from the source.
+- **Build**: `tsdown` outputs to `dist/`. CLI uses Commander + clack/prompts. After touching lazy/module boundaries run `pnpm build` and check `[INEFFECTIVE_DYNAMIC_IMPORT]`.
+- **Types**: Avoid `any`; prefer `unknown` or narrow adapters. `zod` at external boundaries. Discriminated unions over freeform strings for runtime branching.
+- **No `@ts-nocheck`**; lint suppressions must be intentional and explained.
+
+### Key utilities — do not duplicate
+
+Search before creating helpers. Authoritative locations:
+
+| Need | Module |
+|---|---|
+| Time/duration formatting | `src/infra/format-time` |
+| Terminal tables | `src/terminal/table.ts` (`renderTable`) |
+| Terminal colors/themes | `src/terminal/theme.ts` (`theme.success`, `theme.muted`, …) |
+| CLI spinners / progress bars | `src/cli/progress.ts` |
+| CLI option wiring | `src/cli/` |
+| CLI commands | `src/commands/` |
+
+### Mac gateway dev
+
+- Dev watch: `pnpm gateway:watch` (tmux session `openclaw-gateway-watch-main`; auto-attaches).
+- Non-interactive: `OPENCLAW_GATEWAY_WATCH_ATTACH=0 pnpm gateway:watch`.
+- Logs: `./scripts/clawlog.sh`.
+
 ### Naming & language
 
 - Product/docs/UI/changelog: **OpenClaw**, "plugin/plugins".
